@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TikTok</title>
+<style>
+:root{--bg:#0b0b0c;--rd:#fe2c55;--cy:#25f4ee;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0b0c}}
+:root[data-theme="dark"]{--bg:#0b0b0c}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:#fff;font-family:"Proxima Nova",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+svg{display:block;fill:currentColor}
+.col{position:relative;height:100%;width:min(100%,56.25vh);min-width:min(100%,340px);margin:0 auto;background:#000;overflow:hidden;font-size:15px;box-shadow:0 0 60px #fff1}
+.feed{position:absolute;inset:0;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none}
+.feed::-webkit-scrollbar{display:none}
+.vid{position:relative;height:100%;scroll-snap-align:start;scroll-snap-stop:always;overflow:hidden;background:radial-gradient(circle at 50% 40%,#25252a,#0a0a0b 75%)}
+.vid::before{content:"Loading from TikTok…";position:absolute;left:0;right:0;top:44%;text-align:center;color:#fff8;font-size:13px;animation:pu 1.4s infinite}
+@keyframes pu{50%{opacity:.3}}
+.media{position:absolute;inset:0;z-index:1}
+.media iframe,.media video{width:100%;height:100%;border:0;object-fit:cover;background:#000}
+.tap{position:absolute;inset:0;z-index:2}
+.vid::after{content:"";position:absolute;inset:0;z-index:3;background:linear-gradient(#0007,transparent 18%,transparent 62%,#000a);pointer-events:none}
+.pp{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%) scale(.7);font-size:64px;opacity:0;transition:.2s;z-index:4;pointer-events:none}
+.paused .pp{opacity:.85;transform:translate(-50%,-50%)}
+.top{position:absolute;top:calc(10px + env(safe-area-inset-top,0px));left:0;right:0;z-index:20;display:flex;align-items:center;gap:10px;padding:0 12px;height:34px}
+.tabs{flex:1;display:flex;gap:16px;overflow-x:auto;scrollbar-width:none;white-space:nowrap}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{font-size:15px;font-weight:600;opacity:.62;flex:none;padding:4px 0;text-shadow:0 1px 3px #0008;border-bottom:2px solid transparent}
+.tabs button.on{opacity:1;font-weight:800;border-color:#fff}
+#snd{position:absolute;top:calc(52px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:21;background:#000a;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:700;white-space:nowrap;animation:bn 1.6s infinite}
+@keyframes bn{50%{transform:translate(-50%,-4px)}}
+#snd.off{display:none}
+.rail{position:absolute;right:7px;bottom:calc(76px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;align-items:center;gap:13px;z-index:6}
+.a{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:700;text-shadow:0 1px 3px #0008}
+.a svg{width:31px;height:31px;filter:drop-shadow(0 1px 3px #0008);transition:.15s}
+.a:active svg{transform:scale(.82)}
+.a.lk.on svg{color:var(--rd);animation:bump .3s}.a.sv.on svg{color:#ffc300}
+@keyframes bump{50%{transform:scale(1.3)}}
+.pf{position:relative;margin-bottom:6px}
+.pf i{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:#555;border:2px solid #fff;font-style:normal;font-weight:800;font-size:18px;text-transform:uppercase}
+.pf b{position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);width:19px;height:19px;border-radius:50%;background:var(--rd);font-size:14px;line-height:19px;text-align:center}
+.pf b.d{background:#fff;color:var(--rd)}
+.disc{width:34px;height:34px;border-radius:50%;background:conic-gradient(#333,#888,#333,#aaa,#333);border:8px solid #1c1c1c;animation:sp 4s linear infinite}
+.paused .disc{animation-play-state:paused}
+@keyframes sp{to{transform:rotate(1turn)}}
+.cap{position:absolute;left:12px;right:64px;bottom:calc(68px + env(safe-area-inset-bottom,0px));z-index:6;line-height:1.35;text-shadow:0 1px 3px #000a}
+.cap h4{font-size:15px;margin-bottom:4px;cursor:pointer}.cap p{font-size:13px}
+.open{display:inline-block;margin-top:7px;background:#fff3;border-radius:14px;padding:4px 10px;font-size:11px;font-weight:700;text-decoration:none;color:#fff}
+.pop{position:absolute;z-index:8;width:84px;height:84px;color:var(--rd);pointer-events:none;animation:po .8s forwards}
+@keyframes po{0%{transform:scale(0)}40%{transform:scale(1.2)}100%{transform:scale(1.4) translateY(-50px);opacity:0}}
+.hint{position:absolute;left:0;right:0;top:62%;z-index:9;text-align:center;font-weight:700;pointer-events:none;animation:hn 1.4s ease-in-out infinite;transition:.3s;text-shadow:0 1px 4px #000}
+.hint.off{opacity:0;animation:none}
+@keyframes hn{50%{transform:translateY(-14px)}}
+.bn{position:absolute;left:0;right:0;bottom:0;height:calc(58px + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);z-index:20;display:flex;justify-content:space-around;align-items:flex-start;padding-top:7px;background:#000;font-size:9.5px;font-weight:600}
+.bn button{display:flex;flex-direction:column;align-items:center;gap:2px;opacity:.6;width:52px}
+.bn button.on{opacity:1;font-weight:800}
+.bn svg{width:23px;height:23px}
+.bn .pl{opacity:1;height:30px;justify-content:center}
+.pl i{display:grid;place-items:center;width:42px;height:28px;border-radius:8px;background:#fff;color:#000;font-style:normal;font-size:22px;font-weight:700;box-shadow:-3px 0 var(--cy),3px 0 var(--rd)}
+.panel{position:absolute;inset:0;z-index:25;background:#fff;color:#111;transform:translateY(100%);transition:.3s;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+.panel.show{transform:none}
+.ph{display:flex;align-items:center;gap:8px;padding:12px 14px;font-weight:800;font-size:16px;border-bottom:1px solid #0001}
+.ph button{font-size:24px;padding:0 6px}
+.pb{flex:1;overflow-y:auto;padding:10px 12px 70px;scrollbar-width:none}
+.pb input.s{width:100%;background:#f1f1f2;border-radius:20px;padding:11px 14px;border:0;outline:0;font:inherit}
+.row{display:flex;align-items:center;gap:10px;padding:10px 4px;cursor:pointer;border-radius:8px}
+.row:hover{background:#f6f6f7}
+.row .av{width:40px;height:40px;border-radius:50%;background:#e2e2e3;display:grid;place-items:center;font-size:20px;flex:none}
+.row b{display:block;font-size:14px}.row small{color:#777;font-size:12px}
+.btn{margin-left:auto;background:var(--rd);color:#fff;font-weight:700;border-radius:5px;padding:7px 14px;font-size:13px}
+.btn.o{background:#eee;color:#111}
+.grid{columns:2;column-gap:8px}
+.cd{break-inside:avoid;margin-bottom:10px;cursor:pointer}
+.th{border-radius:6px;display:grid;place-items:center;color:#fff;font-size:34px;font-weight:800}
+.cd p{font-size:11px;font-weight:700;margin:5px 0 3px}.cd small{font-size:10px;color:#777}
+.pro{text-align:center;padding-top:14px}.pro .av{width:80px;height:80px;margin:0 auto 8px;border-radius:50%;background:#e2e2e3;display:grid;place-items:center;font-size:38px}
+.sheet{position:absolute;left:0;right:0;bottom:0;height:62%;z-index:27;background:#fff;color:#111;border-radius:16px 16px 0 0;transform:translateY(110%);transition:.3s;display:flex;flex-direction:column}
+.sheet.show{transform:none}
+.sh{display:flex;justify-content:space-between;padding:14px 16px;font-weight:800;font-size:13px;border-bottom:1px solid #0001}
+.sl{flex:1;overflow:auto;padding:10px 14px}
+.cm{display:flex;gap:10px;margin-bottom:14px}.cm .av{width:32px;height:32px;border-radius:50%;background:#e2e2e3;display:grid;place-items:center;flex:none}
+.cm b{font-size:12px;color:#777}.cm p{font-size:14px;margin:2px 0}.cm small{color:#888;font-size:11px}
+.cf{display:flex;gap:8px;padding:10px;border-top:1px solid #0001}
+.cf input{flex:1;background:#f1f1f2;border:0;border-radius:8px;padding:11px;outline:0;font:inherit;min-width:0}
+.cf button{color:var(--rd);font-weight:800;padding:0 8px}
+.shg{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:16px;text-align:center;font-size:11px}
+.shg div{cursor:pointer}.shg span{display:grid;place-items:center;width:50px;height:50px;border-radius:50%;background:#eee;font-size:22px;margin:0 auto 5px}
+.up{padding:18px 16px;overflow:auto}
+.up label.f{display:block;text-align:center;margin:12px 0;background:#eee;font-weight:800;padding:12px;border-radius:6px;cursor:pointer}
+.up p{font-size:12px;color:#777;line-height:1.5;margin-bottom:8px}
+.toast{position:absolute;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translate(-50%,16px);background:#000d;color:#fff;padding:9px 16px;border-radius:8px;font-size:13px;z-index:40;opacity:0;transition:.25s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 21s-8.5-5.4-8.5-11.2A4.6 4.6 0 0 1 12 7.4a4.6 4.6 0 0 1 8.5 2.4C20.5 15.6 12 21 12 21z"/></symbol>
+<symbol id="i-cm" viewBox="0 0 24 24"><path d="M4 3h16a1.5 1.5 0 0 1 1.5 1.5v11A1.5 1.5 0 0 1 20 17h-8l-5 4v-4H4a1.5 1.5 0 0 1-1.5-1.5v-11A1.5 1.5 0 0 1 4 3z"/><g fill="#222"><circle cx="8" cy="10" r="1.3"/><circle cx="12" cy="10" r="1.3"/><circle cx="16" cy="10" r="1.3"/></g></symbol>
+<symbol id="i-bk" viewBox="0 0 24 24"><path d="M6 2.5h12a1 1 0 0 1 1 1V22l-7-4.5L5 22V3.5a1 1 0 0 1 1-1z"/></symbol>
+<symbol id="i-sh" viewBox="0 0 24 24"><path d="M14 3l8.5 8.5L14 20v-5C8 15 5 17 2.5 21 3 14 6 9 14 8z"/></symbol>
+<symbol id="i-s" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></g></symbol>
+<symbol id="i-live" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="3.5"/><path d="M9 3.5l3 2 3-2"/></g><path d="M10 9.5v5l4-2.5z"/></symbol>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M12 2.8l9.5 8h-3V21h-5v-6h-3v6h-5v-10.2h-3z"/></symbol>
+<symbol id="i-fr" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.6"/><path d="M2.5 20c0-4 3-6 6.5-6s6.5 2 6.5 6"/><circle cx="17" cy="9" r="2.6"/><path d="M17.5 14c2.5 0 4.5 1.5 4.5 5"/></g></symbol>
+<symbol id="i-in" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 4.5h18v12.5H10l-4.5 3.5V17H3z"/><path d="M7.5 9h9M7.5 12.5h5"/></g></symbol>
+<symbol id="i-pr" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4.2"/><path d="M4 21c0-5 4-7 8-7s8 2 8 7"/></g></symbol>
+</defs></svg>
+
+<div class="col">
+ <div class="feed" id="feed"></div>
+ <div class="hint" id="hint">⇡<br>Swipe up for more</div>
+ <div class="top"><button data-p="live"><svg width="24" height="24"><use href="#i-live"/></svg></button><div class="tabs" id="tabs"></div><button data-p="search"><svg width="22" height="22"><use href="#i-s"/></svg></button></div>
+ <button id="snd">🔇 Tap for sound</button>
+ <div class="bn" id="bn"></div>
+ <div class="panel" id="pn"></div>
+ <div class="sheet" id="sheet"></div>
+ <div class="toast" id="ts"></div>
+</div>
+
+<script>
+const $=(s,e=document)=>e.querySelector(s),$$=(s,e=document)=>[...e.querySelectorAll(s)];
+const ic=(n,s=23)=>`<svg width="${s}" height="${s}"><use href="#i-${n}"/></svg>`;
+const esc=s=>String(s).replace(/[<>&"]/g,"");
+/* ===== REAL TIKTOK VIDEOS (official TikTok embed player) =====
+   Add more: copy any tiktok.com/@user/video/ID link -> {id:"ID",u:"user"}.
+   Or paste a link inside the app with the + button. */
+const V=[
+ {id:"7332342275151760642",u:"looooooooch",cap:"Summer 😊",tags:"#Inverted",l:"74.4M",c:"Drama"},
+ {id:"6862153058223197445",u:"bellapoarch",cap:"To the 🐝 🐝 🐝",tags:"#fyp",l:"73.3M",c:"Following"},
+ {id:"6932635718615338246",u:"thenickluciano",cap:"And no it's not a green screen. 😂 run it up!",tags:"#nickluciano #sugarcrush",l:"57.0M",c:"Following"},
+ {id:"6911406868699073798",u:"franekbielak_art",cap:"😳 This is one of my best drawings",tags:"#tiktokart #drawing #fyp",l:"52.1M",c:"STEM"},
+ {id:"7545792747177856270",u:"littlemanyu",cap:"Little Manyu's at-home spa day",tags:"#fyp",c:"Community"},
+ {id:"7550785140046171422",u:"abcnews",cap:"A viral dog moment from ABC News",tags:"#dogsoftiktok",c:"Community"},
+ {id:"7553344162133822775",u:"samaraispinkk",cap:"The viral moo dance",tags:"#dance #fyp",c:"Friends"},
+ {id:"6718335390845095173",u:"scout2015",cap:"Scramble up ur name & I'll try to guess it😍❤️",tags:"#foryoupage #petsoftiktok #aesthetic",c:"Friends"},
+ {id:"7546697412484599070",u:"brookemonk_",cap:"",tags:"#fyp",c:"Drama"},
+ {id:"7547923003355434253",u:"izzyandmarysdad",cap:"",tags:"#fyp",c:"Community"}
+];
+/* left -> right. Following is next to For You, then Friends, Drama, Community, STEM going left */
+const TABS=["Explore","STEM","Community","Drama","Friends","Following","For You"];
+let tab="For You",list=V,act=-1,unlocked=false,muted=false;
+const T=$("#ts");
+const toast=m=>{T.textContent=m;T.classList.add("show");clearTimeout(T._);T._=setTimeout(()=>T.classList.remove("show"),1500)};
+const link=v=>`https://www.tiktok.com/@${v.u}/video/${v.id}`;
+const player=v=>`https://www.tiktok.com/player/v1/${v.id}?autoplay=1&loop=1&controls=0&description=0&music_info=0&rel=0&native_context_menu=0&closed_caption=0`;
+const post=(el,type)=>{try{el.contentWindow.postMessage({"x-tiktok-player":true,type},"*")}catch(e){}};
+const curEl=()=>{const s=$$(".vid")[act];return s&&$(".media",s).firstChild};
+/* ===== PLAYBACK ===== */
+function mount(i){const s=$$(".vid")[i],v=list[i];if(!s)return;const box=$(".media",s);if(box.firstChild)return;
+ if(v.file){const el=document.createElement("video");el.src=v.file;el.loop=true;el.playsInline=true;el.autoplay=true;el.muted=muted||!unlocked;box.appendChild(el);el.play().catch(()=>{})}
+ else{const f=document.createElement("iframe");f.src=player(v);f.allow="autoplay; encrypted-media; fullscreen";f.setAttribute("allowfullscreen","");f.onload=()=>[700,2000].forEach(t=>setTimeout(()=>{if(unlocked&&!muted)post(f,"unMute")},t));box.appendChild(f)}
+ v.paused=false;s.classList.remove("paused")}
+function unmount(i){const s=$$(".vid")[i];if(s)$(".media",s).innerHTML=""}
+function activate(i){if(act===i)return;unmount(act);act=i;mount(i)}
+function toggle(i){const s=$$(".vid")[i],v=list[i],el=$(".media",s).firstChild;if(!el)return;v.paused=!v.paused;s.classList.toggle("paused",v.paused);
+ if(v.file)v.paused?el.pause():el.play();else post(el,v.paused?"pause":"play")}
+function applyMute(){const el=curEl();if(!el)return;const m=muted||!unlocked;if(list[act].file)el.muted=m;else post(el,m?"mute":"unMute")}
+function toggleMute(){muted=!muted;applyMute();toast(muted?"Muted":"Sound on")}
+["pointerdown","keydown"].forEach(e=>addEventListener(e,()=>{if(unlocked)return;unlocked=true;$("#snd").classList.add("off");applyMute();[500,1500].forEach(t=>setTimeout(applyMute,t))},{capture:true}));
+/* ===== FEED ===== */
+function render(){
+ $("#feed").innerHTML=list.map((v,i)=>`<section class="vid" data-i="${i}"><div class="media"></div><div class="tap"></div><div class="pp">❚❚</div>
+ <div class="rail">
+  <div class="pf" data-user><i>${esc(v.u[0])}</i><b data-f class="${v.f?"d":""}">${v.f?"✓":"+"}</b></div>
+  <button class="a lk ${v.lk?"on":""}" data-lk>${ic("heart",31)}<span>${v.l||"Like"}</span></button>
+  <button class="a" data-cm>${ic("cm",31)}<span>Comment</span></button>
+  <button class="a sv ${v.sv?"on":""}" data-sv>${ic("bk",31)}<span>Save</span></button>
+  <button class="a" data-sh>${ic("sh",31)}<span>Share</span></button>
+  <div class="disc" data-disc></div></div>
+ <div class="cap"><h4 data-user>@${esc(v.u)}</h4><p>${esc(v.cap||"")} <b>${esc(v.tags||"")}</b></p>${v.file?"":`<a class="open" href="${link(v)}" target="_blank" rel="noopener">↗ Open on TikTok</a>`}</div></section>`).join("");
+ act=-1;$("#feed").scrollTop=0;$("#hint").classList.remove("off");
+ io.disconnect();$$(".vid").forEach(s=>io.observe(s));
+}
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting&&e.intersectionRatio>.6)activate(+e.target.dataset.i)}),{root:$("#feed"),threshold:[.6]});
+function tabs(){$("#tabs").innerHTML=TABS.map(k=>`<button class="${k===tab?"on":""}">${k}</button>`).join("");const b=$("#tabs .on");b&&b.scrollIntoView({inline:"center",block:"nearest"})}
+function setTab(k){unmount(act);tab=k;list=k==="For You"?V:V.filter(v=>v.c===k);if(!list.length){tab="For You";list=V;toast("No videos in "+k+" yet")}tabs();render();setNav("home")}
+$("#tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;b.textContent==="Explore"?panel("explore"):setTab(b.textContent)};
+$("#feed").addEventListener("scroll",()=>$("#hint").classList.add("off"),{passive:true});
+let ct;
+$("#feed").addEventListener("click",e=>{
+ const sec=e.target.closest(".vid");if(!sec)return;const i=+sec.dataset.i,v=list[i],t=e.target;
+ const lk=()=>{const b=$("[data-lk]",sec);v.lk=!v.lk;b.classList.toggle("on",v.lk)};
+ if(t.closest("[data-lk]"))return lk();
+ if(t.closest("[data-cm]"))return comments();
+ if(t.closest("[data-sv]")){v.sv=!v.sv;t.closest("[data-sv]").classList.toggle("on",v.sv);return toast(v.sv?"Added to Favorites":"Removed from Favorites")}
+ if(t.closest("[data-sh]"))return share(v);
+ if(t.closest("[data-f]")){v.f=!v.f;const b=t.closest("[data-f]");b.classList.toggle("d",v.f);b.textContent=v.f?"✓":"+";return toast(v.f?"Following @"+v.u:"Unfollowed")}
+ if(t.closest("[data-user]"))return panel("profile",v);
+ if(t.closest("[data-disc]"))return toggleMute();
+ if(!t.closest(".tap"))return;
+ if(ct){clearTimeout(ct);ct=null;const r=sec.getBoundingClientRect(),h=document.createElement("div");h.className="pop";h.innerHTML=ic("heart",84);h.style.left=e.clientX-r.left-42+"px";h.style.top=e.clientY-r.top-42+"px";sec.appendChild(h);setTimeout(()=>h.remove(),800);if(!v.lk)lk();return}
+ ct=setTimeout(()=>{ct=null;toggle(i)},250);
+});
+/* ===== SHEETS ===== */
+const sheet=$("#sheet");
+const openSheet=h=>{sheet.innerHTML=h;sheet.classList.add("show")},closeSheet=()=>sheet.classList.remove("show");
+const CM=[["maria_s","This is so good! 😍","2h"],["jayr","Pa-follow back po 🙏","3h"],["kuya_mike","Grabe ang galing!!","5h"],["anna.l","Sino nandito 2026? 🙋","1d"]];
+const cmH=(n,t,a)=>`<div class="cm"><div class="av">🙂</div><div><b>${n}</b><p>${t}</p><small>${a} · Reply</small></div></div>`;
+const comments=()=>openSheet(`<div class="sh"><span>Comments</span><button data-cs>✕</button></div><div class="sl" id="cl">${CM.map(c=>cmH(...c)).join("")}</div><div class="cf"><input id="ci" placeholder="Add comment..."><button data-post>Post</button></div>`);
+const share=v=>openSheet(`<div class="sh"><span>Share to</span><button data-cs>✕</button></div><div class="shg">${[["🔗","Copy link"],["💬","WhatsApp"],["✉️","Messenger"],["↻","Repost"],["📩","SMS"],["⬇️","Save video"],["🚫","Not interested"],["⚑","Report"]].map(([i,l])=>`<div data-sx="${l}" data-l="${v.file?"":link(v)}"><span>${i}</span>${l}</div>`).join("")}</div>`);
+const upload=()=>openSheet(`<div class="sh"><span>Add video</span><button data-cs>✕</button></div><div class="up"><p>Paste any TikTok link (tiktok.com/@user/video/…):</p><div class="cf" style="padding:0 0 8px;border:0"><input id="tl" placeholder="https://www.tiktok.com/@user/video/…"><button data-add>Add</button></div><label class="f">🎬 Or choose a video file<input id="file" type="file" accept="video/*" hidden></label></div>`);
+function addVid(v){V.unshift(v);setTab("For You");toast("Added ✓")}
+sheet.addEventListener("click",e=>{
+ if(e.target.closest("[data-cs]"))return closeSheet();
+ const sx=e.target.closest("[data-sx]");if(sx){closeSheet();if(sx.dataset.sx==="Copy link"){try{navigator.clipboard.writeText(sx.dataset.l)}catch(_){}return toast("Link copied!")}return toast(sx.dataset.sx+" ✓")}
+ if(e.target.closest("[data-post]")){const i=$("#ci");if(i.value.trim()){$("#cl").insertAdjacentHTML("afterbegin",cmH("you",esc(i.value),"now"));i.value=""}}
+ if(e.target.closest("[data-add]")){const m=$("#tl").value.match(/tiktok\.com\/@([\w.\-]+)\/video\/(\d+)/);if(!m)return toast("Invalid TikTok video link");closeSheet();addVid({id:m[2],u:m[1],cap:"",tags:"",c:"For You"})}
+});
+sheet.addEventListener("keydown",e=>{if(e.key!=="Enter")return;if(e.target.id==="ci")$("[data-post]").click();if(e.target.id==="tl")$("[data-add]").click()});
+sheet.addEventListener("change",e=>{if(e.target.id!=="file"||!e.target.files[0])return;const f=e.target.files[0];closeSheet();addVid({file:URL.createObjectURL(f),u:"you",cap:f.name,tags:"",c:"For You"})});
+/* ===== PANELS ===== */
+const pn=$("#pn");
+const rowH=(a,n,s,b)=>`<div class="row"><div class="av">${a}</div><div><b>${n}</b><small>${s}</small></div>${b?`<button class="btn" data-fb>${b}</button>`:""}</div>`;
+function panel(k,v){
+ const hd=t=>`<div class="ph"><button data-back>‹</button>${t}</div>`;let h="";
+ if(k==="search")h=hd("Search")+`<div class="pb"><input class="s" placeholder="Search"><h4 style="margin:14px 4px 4px;font-size:13px;color:#777">Trending</h4>${["dance challenge","viral dog","pinoy street food","drawing tutorial","stem experiments"].map(t=>rowH("🔥",t,"Trending now")).join("")}</div>`;
+ if(k==="live")h=hd("LIVE")+`<div class="pb"><div class="grid">${["🎮","🎤","🍳","🎨"].map((e,i)=>`<div class="cd"><div class="th" style="height:${150+i%2*50}px;background:#2a2a2d">${e}</div><p>Live: Lorem ipsum ${i+1}</p><small>● ${(i+2)*1.2|0}K watching</small></div>`).join("")}</div></div>`;
+ if(k==="explore")h=hd("Explore")+`<div class="pb"><div class="grid">${V.map((x,i)=>`<div class="cd" data-v="${i}"><div class="th" style="height:${150+(i%3)*30}px;background:hsl(${i*37},45%,26%)">${esc(x.u[0])}</div><p>${esc(x.cap||x.tags||"")}</p><small>@${esc(x.u)}${x.l?" · ♥ "+x.l:""}</small></div>`).join("")}</div></div>`;
+ if(k==="friends")h=hd("Friends")+`<div class="pb">${V.slice(0,5).map(x=>rowH(esc(x.u[0]).toUpperCase(),x.u,"Suggested friend","Follow")).join("")}</div>`;
+ if(k==="inbox")h=hd("Inbox")+`<div class="pb">${[["👥","New followers","3 people followed you"],["❤️","Activity","maria_s liked your video"],["🔔","System notifications","Welcome to TikTok!"],["💬","besty_ana","Uy nakita mo na ba 'to? 😂"]].map(a=>rowH(...a)).join("")}</div>`;
+ if(k==="profile")h=hd("@"+(v?esc(v.u):"you"))+`<div class="pb pro"><div class="av">${v?esc(v.u[0]).toUpperCase():"👤"}</div><b>@${v?esc(v.u):"you"}</b><p style="margin:12px 0;font-size:13px;color:#777">${v?"Creator on TikTok":"Sign up to follow creators, like videos, and view comments."}</p><button class="btn" style="margin:0 6px" data-fb>${v?"Follow":"Log in"}</button>${v?`<a class="btn o" style="display:inline-block;text-decoration:none" href="https://www.tiktok.com/@${esc(v.u)}" target="_blank" rel="noopener">Open on TikTok</a>`:""}</div>`;
+ pn.innerHTML=h;requestAnimationFrame(()=>pn.classList.add("show"));
+}
+pn.addEventListener("click",e=>{
+ if(e.target.closest("[data-back]")){pn.classList.remove("show");return setNav("home")}
+ const f=e.target.closest("[data-fb]");if(f){const o=f.classList.toggle("o");f.textContent=o?"Following":"Follow";return toast(o?"Done ✓":"Undone")}
+ const d=e.target.closest("[data-v]");if(d){pn.classList.remove("show");setTab("For You");const i=+d.dataset.v;setTimeout(()=>$("#feed").scrollTo({top:i*$("#feed").clientHeight}),60);return}
+ if(e.target.closest(".row,.cd"))toast("Opening…");
+});
+const N=[["home","Home","home"],["fr","Friends","friends"],["+"],["in","Inbox","inbox"],["pr","Profile","profile"]];
+$("#bn").innerHTML=N.map(([i,l,k])=>i==="+"?`<button class="pl" data-n="up"><i>+</i></button>`:`<button data-n="${k}" class="${k==="home"?"on":""}">${ic(i)}${l}</button>`).join("");
+function setNav(k){$$("#bn button[data-n]").forEach(b=>b.classList.toggle("on",b.dataset.n===k))}
+$("#bn").onclick=e=>{const b=e.target.closest("[data-n]");if(!b)return;const k=b.dataset.n;
+ if(k==="up")return upload();
+ if(k==="home"){pn.classList.remove("show");closeSheet();$("#feed").scrollTo({top:0,behavior:"smooth"});return setNav("home")}
+ setNav(k);panel(k)};
+$$("[data-p]").forEach(b=>b.onclick=()=>panel(b.dataset.p));
+document.addEventListener("keydown",e=>{
+ if(e.target.tagName==="INPUT")return;const f=$("#feed");
+ if(e.key==="ArrowDown")f.scrollBy({top:f.clientHeight,behavior:"smooth"});
+ if(e.key==="ArrowUp")f.scrollBy({top:-f.clientHeight,behavior:"smooth"});
+ if(e.key==="m")toggleMute();
+ if(e.key===" "){e.preventDefault();if(act>-1)toggle(act)}
+ if(e.key==="Escape"){closeSheet();pn.classList.remove("show")}
+});
+tabs();render();
+</script>
+</body>
+</html>
